@@ -10,5 +10,7 @@
             "email": "ayoub1benmansour@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.19"
+    }
 }

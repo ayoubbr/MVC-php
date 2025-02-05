@@ -17,7 +17,7 @@ class Router
     {
         $this->addRoute($route, $controller, $action, "GET");
     }
-
+    
     public function post($route, $controller, $action)
     {
         $this->addRoute($route, $controller, $action, "POST");

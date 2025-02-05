@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Core\Database;
+
 class Role
 {
     private int $id = 0;
@@ -9,21 +11,24 @@ class Role
     private string $description = "";
     private string $badge = "";
 
-    public function __construct($name, $description, $badge)
-    {
-        $this->name = $name;
-        $this->description = $description;
-        $this->badge = $badge;
-    }
+    public function __construct() {}
 
-    // public function __call($name, $arguments)
-    // {
-    //     if ($name == 'instanceWithName') {
-    //         if (count($arguments) == 1) {
-    //             $this->name = $arguments[0];
-    //         }
-    //     }
-    // }
+    public function __call($name, $arguments)
+    {
+        if ($name == 'instanceWithName') {
+            if (count($arguments) == 1) {
+                $this->name = $arguments[0];
+            }
+        }
+
+        if ($name == 'instanceWithAll') {
+            if (count($arguments) == 3) {
+                $this->name = $arguments[0];
+                $this->description = $arguments[1];
+                $this->badge = $arguments[2];
+            }
+        }
+    }
 
     public function getId(): int
     {
@@ -72,5 +77,24 @@ class Role
         $description = $this->description ?? "";
         $badge = $this->badge ?? "";
         return "(Role) => id : " . $id . " , name : " . $name . " , description : " . $description . " , badge : " . $badge;
+    }
+
+    public function findByName(string $name)
+    {
+        $query = "SELECT id, name, description, badge FROM roles WHERE name = '" . $name . "';";
+        $stmt = Database::get()->connect()->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetchObject(Role::class);
+        return $result;
+    }
+
+    public function findById(int $id): Role
+    {
+        $query = "SELECT id, name, description, badge FROM roles WHERE id = " . $id . ";";
+        $stmt = Database::get()->connect()->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchObject(Role::class);
+        return $result;
     }
 }
